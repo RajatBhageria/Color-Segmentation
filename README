@@ -1,0 +1,31 @@
+The folder Labeling contains all the mechanism to use roipoly.py to label the images (this was provided directly by the teaching staff).
+
+barrelClassication is the main class that I used to generate the model and train the model.
+
+Within barrelClassification, there are multiple methods:
+* trainModel learns all the parameters: mu_barrel, mu_others, covariance_barrel, covariance_others, prior_barrel, and prior_others and
+then it saves all the parameters as .npy files in the root folder. It also saves the file "distanceRegression.sav"
+which is the sklearn regressor for the distance estimation. Now that the model parameters are trained, this method
+is not called unless we need to retrain the mode
+
+* createBarrelMask takes in an test image, loads all the parameters for the trained model, and then actually does the naive bayes
+calculation with argmax to figure out which pixels are barrels and which pixels are non-barrels. It returns a barrel mask
+where all pixels that are barrels are 1 and 0 otherwise.
+
+* barrelClassififcation takes in an image, calls createBarrelMask to get the mask, does region analysis to find the centroid,
+and finds the distance to the barrel using regression.
+
+testClassification is the testing algorithm. All you have to do is create a folder called "Test_Set" and add all the testing
+images to it. Then testClassification should print all the results. testClassifcation calls barrelClassification.barrelClassification
+
+To test the algorithm, simply change the folder path in testClassification.py from 'Labeling/images/' to where ever
+the test images are, and then run play.
+
+Trained paremeters/models:
+mu_barrel.npy: 1x3 mu for red barrel
+mu_others.npy: 1x3 mu for all other pixels
+covariance_barrel.npy: 3x3 sigma for red barrel
+covariance_others.npy: 3x3 sigma for all other pixels
+prior_barrel.npy: 1x1 prior probability for barrel
+prior_others.npy: 1x1 prior probability for barrel
+distanceRegression.sav: sklearn linear regressor for distance estimation.
